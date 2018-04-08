@@ -1,31 +1,36 @@
 package com.example.master;
 
+import android.content.ComponentName;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.view.View;
+import android.view.View.OnClickListener;
 
 import java.util.Calendar;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements OnClickListener {
 
 
     /*--UI--*/
     TextView textView_time;
-    TextView textview_showCardID;
-    TextView textview_showTempVal;
-    TextView textview_showSquezVal;
+    public static TextView textview_showCardID;
+    public static TextView textview_showTempVal;
+    public static TextView textview_showSquezVal;
     Button button_cardID;
     Button button_gettempVal;
     Button button_getsquezVal;
     Button button_sendData;
     /*--UI--*/
-
 
     /*获取系统当前时间函数*/
     public String getCurrentSystemTime(){
@@ -68,12 +73,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
 
-
+        /*UI实例化*/
         textView_time=(TextView) findViewById(R.id.textView_time);//实例化显示时间的textview
-        textview_showCardID=(TextView) findViewById(R.id.textView_CARDID);//实例化ID显示
+        textview_showCardID=(TextView) findViewById(R.id.textView_CARDID);//实例化卡ID显示
         textview_showTempVal=(TextView) findViewById(R.id.textView_sqzVal);//实例化温度显示
         textview_showSquezVal=(TextView) findViewById(R.id.textView_sqzVal);//实例化震动频率显示
 
+        button_cardID=(Button) findViewById(R.id.button_card);
+        button_gettempVal=(Button) findViewById(R.id.button_temp);
+        button_getsquezVal=(Button) findViewById(R.id.button_squez);
+        button_sendData=(Button) findViewById(R.id.button_send);
+
+
+        button_cardID.setOnClickListener(this);
+        button_gettempVal.setOnClickListener(this);
+        button_getsquezVal.setOnClickListener(this);
+        button_sendData.setOnClickListener(this);
+        /*UI实例化*/
     }
 
     @Override
@@ -87,10 +103,52 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onDestroy();
     }
 
+
     @Override
     public void onClick(View v) {
 
+        //Log.d("MainActivity","按键按下");
+        switch (v.getId())
+        {
+            case R.id.button_card:cardID_start_app();break;
+            case R.id.button_temp:TempAndSquez_start_app();break;
+            case R.id.button_squez:TempAndSquez_start_app();break;
+            case R.id.button_send:break;
+            default:
+        }
+
     }
+
+    private void cardID_start_app(){
+
+        try {
+        Intent intent = new Intent();
+        ComponentName name = new ComponentName("com.example.master.zc_basicnfcfunctest"
+                                                    ,"com.example.master.zc_basicnfcfunctest.BasicNFCFunc");
+        intent.setComponent(name);
+        startActivity(intent);
+        }catch(Exception e)
+        {
+             Toast.makeText(this,"请先安装该app",Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    private void TempAndSquez_start_app(){
+
+        try {
+            Intent intent = new Intent();
+            ComponentName name = new ComponentName("com.example.master.temp_squeez"
+                    ,"com.example.master.temp_squeez.MainActivity");
+            intent.setComponent(name);
+            startActivity(intent);
+        }catch(Exception e)
+        {
+            Toast.makeText(this,"请先安装该app",Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
 
     private class get_timeThread extends Thread {
         @Override

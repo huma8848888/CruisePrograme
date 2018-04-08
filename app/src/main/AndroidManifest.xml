@@ -22,8 +22,16 @@
             android:enabled="true"
             android:exported="true">
             <intent-filter>
-                <action android:name="com.bjzc.wd"/>
+                <action android:name="com.bjzc.wd" />
+            </intent-filter>
+        </receiver>
 
+        <receiver
+            android:name=".cardID_receiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.bjzc.frd"/>
             </intent-filter>
 
         </receiver>

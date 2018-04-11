@@ -16,6 +16,8 @@ import android.widget.Toast;
 import android.view.View;
 import android.view.View.OnClickListener;
 
+import com.jaeger.library.StatusBarUtil;
+
 import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity implements OnClickListener {
@@ -76,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
         /*UI实例化*/
         textView_time=(TextView) findViewById(R.id.textView_time);//实例化显示时间的textview
         textview_showCardID=(TextView) findViewById(R.id.textView_CARDID);//实例化卡ID显示
-        textview_showTempVal=(TextView) findViewById(R.id.textView_sqzVal);//实例化温度显示
+        textview_showTempVal=(TextView) findViewById(R.id.textView_tempVal);//实例化温度显示
         textview_showSquezVal=(TextView) findViewById(R.id.textView_sqzVal);//实例化震动频率显示
 
         button_cardID=(Button) findViewById(R.id.button_card);
@@ -90,6 +92,10 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
         button_getsquezVal.setOnClickListener(this);
         button_sendData.setOnClickListener(this);
         /*UI实例化*/
+
+        //目的是让状态栏全透明
+        StatusBarUtil.setTransparent(MainActivity.this);
+
     }
 
     @Override
@@ -105,14 +111,19 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 
 
     @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
     public void onClick(View v) {
 
         //Log.d("MainActivity","按键按下");
         switch (v.getId())
         {
             case R.id.button_card:cardID_start_app();break;
-            case R.id.button_temp:TempAndSquez_start_app();break;
-            case R.id.button_squez:TempAndSquez_start_app();break;
+            case R.id.button_temp:TempAndSquez_start_app("get_Temp");break;
+            case R.id.button_squez:TempAndSquez_start_app("get_Squez");break;
             case R.id.button_send:break;
             default:
         }
@@ -134,13 +145,19 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 
     }
 
-    private void TempAndSquez_start_app(){
+    private void TempAndSquez_start_app(String chooser){
 
         try {
             Intent intent = new Intent();
-            ComponentName name = new ComponentName("com.example.master.temp_squeez"
-                    ,"com.example.master.temp_squeez.MainActivity");
+            ComponentName name = new ComponentName("com.example.master.temp_squeez","com.example.master.temp_squeez.MainActivity");
             intent.setComponent(name);
+            if (chooser=="get_Temp")
+            {
+                intent.putExtra("getter",chooser);//在这里判断是测温还是测震
+
+            }
+            else
+                intent.putExtra("getter",chooser);//
             startActivity(intent);
         }catch(Exception e)
         {
@@ -150,7 +167,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
     }
 
 
-    private class get_timeThread extends Thread {
+    private class get_timeThread extends Thread {//用来计时1秒的子线程
         @Override
         public void run() {
             while (true)

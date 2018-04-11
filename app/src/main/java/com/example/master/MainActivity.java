@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -33,6 +34,12 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
     Button button_getsquezVal;
     Button button_sendData;
     /*--UI--*/
+
+    /*SQL*/
+    sql_application sql_application_handler=new sql_application();
+    private final int UPDATE=1,QUERY=2;
+    private String[] indexToSend=new String[]{"","",""};//第一位为卡ID，第二位为温度，第三位为震动频率
+    /*SQL*/
 
     /*获取系统当前时间函数*/
     public String getCurrentSystemTime(){
@@ -124,7 +131,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
             case R.id.button_card:cardID_start_app();break;
             case R.id.button_temp:TempAndSquez_start_app("get_Temp");break;
             case R.id.button_squez:TempAndSquez_start_app("get_Squez");break;
-            case R.id.button_send:break;
+            case R.id.button_send:sql_handler();break;
             default:
         }
 
@@ -166,6 +173,16 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 
     }
 
+
+    private void sql_handler()
+    {
+        indexToSend[0]=cardID_receiver.cardID;
+        indexToSend[1]=tempValreceiver.tempVal;
+        indexToSend[2]=tempValreceiver.squezVal;
+
+        
+        sql_application_handler.sql_handler(indexToSend,UPDATE);
+    }
 
     private class get_timeThread extends Thread {//用来计时1秒的子线程
         @Override

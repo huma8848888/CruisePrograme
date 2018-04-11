@@ -8,7 +8,7 @@ import com.example.master.MainActivity;
 
 public class cardID_receiver extends BroadcastReceiver {
 
-    public String cardID="";
+    public static String cardID="";
     @Override
     public void onReceive(Context context, Intent intent) {
         // TODO: This method is called when the BroadcastReceiver is receiving
@@ -18,4 +18,6 @@ public class cardID_receiver extends BroadcastReceiver {
         MainActivity.textview_showCardID.setText(cardID);
         Toast.makeText(context,"卡号:"+cardID,Toast.LENGTH_SHORT).show();
     }
+
+
 }

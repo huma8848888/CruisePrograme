@@ -8,7 +8,7 @@ import android.widget.Toast;
 /*测温和测震的广播都在此接收*/
 public class tempValreceiver extends BroadcastReceiver {
 
-    private String tempVal,squezVal;
+    public static String tempVal,squezVal;
 
     @Override
     public void onReceive(Context context, Intent intent) {
